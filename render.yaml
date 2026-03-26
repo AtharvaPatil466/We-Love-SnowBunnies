@@ -1,0 +1,28 @@
+services:
+  - type: web
+    name: fraudsense-api
+    env: python
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt -r requirements-ml.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: AUTH_SECRET_KEY
+        sync: false
+      - key: GRAPH_FOCUS_USER_ID
+        value: user_01
+      - key: MODEL_CHECKPOINT_PATH
+        sync: false
+      - key: EXPO_PUSH_DRY_RUN
+        value: "true"
+      - key: EXPO_PUSH_ACCESS_TOKEN
+        sync: false
+
+  - type: web
+    name: fraudsense-web
+    env: static
+    rootDir: web
+    buildCommand: npm ci && npm run build
+    staticPublishPath: dist
+    envVars:
+      - key: VITE_API_BASE_URL
+        sync: false
